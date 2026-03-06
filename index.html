@@ -1,1 +1,66 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORLD OF GOD (WOG)</title>
+    <style>
+        body { background: #0f172a; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(10px); 
+            border-radius: 20px; 
+            padding: 20px; 
+            width: 90%; 
+            max-width: 400px; 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 20px;
+        }
+        .song-btn { background: #3b82f6; color: white; border: none; padding: 10px; border-radius: 10px; width: 100%; margin: 5px 0; cursor: pointer; }
+        input, textarea { width: 100%; padding: 10px; margin: 10px 0; border-radius: 10px; border: none; }
+    </style>
+</head>
+<body>
+    <h1>WORLD OF GOD</h1>
+    <div id="songList" class="glass-card">పాటలు లోడ్ అవుతున్నాయి...</div>
 
+    <div class="glass-card">
+        <h3>సువార్త ప్రయాణం (Tracker)</h3>
+        <input type="text" id="userName" placeholder="మీ పేరు">
+        <textarea id="userReport" placeholder="ఈరోజు సువార్త రిపోర్ట్"></textarea>
+        <button class="song-btn" onclick="submitReport()">రిపోర్ట్ పంపండి</button>
+    </div>
+
+    <script>
+        const scriptUrl = "మీ_APPS_SCRIPT_URL_ఇక్కడ_పేస్ట్_చేయండి";
+
+        async function fetchSongs() {
+            const response = await fetch(scriptUrl);
+            const songs = await response.json();
+            let html = "<h3>పాటల జాబితా</h3>";
+            songs.forEach(song => {
+                html += `<button class="song-btn" onclick="playSong('${song.audioUrl}')">${song.title}</button>`;
+            });
+            document.getElementById('songList').innerHTML = html;
+        }
+
+        function playSong(url) {
+            let audio = new Audio(url);
+            audio.play();
+            alert("పాట ప్లే అవుతోంది...");
+        }
+
+        async function submitReport() {
+            const name = document.getElementById('userName').value;
+            const report = document.getElementById('userReport').value;
+            await fetch(scriptUrl, {
+                method: 'POST',
+                body: JSON.stringify({ name: name, work: "General", report: report })
+            });
+            alert("ధన్యవాదాలు! మీ రిపోర్ట్ చేరింది.");
+        }
+
+        fetchSongs();
+    </script>
+</body>
+</html>
